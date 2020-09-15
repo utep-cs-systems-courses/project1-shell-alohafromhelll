@@ -2,10 +2,20 @@
 import os, sys, re
 
 while True:
-    #get input from command line
-    x = input()
+    #ps1 var
+    if 'PS1' in os.environ:
+        os.write(1, (os.environ['PS1']).encode())
+    #default set to $
+    else:
+        os.write(1, ('$').encode())
+    try:
+        userCommand = input()
+    except EOFError:
+        sys.exit(1)
+
+    
     # split input by blank space
-    split_string = x.split(" ")
+    split_string = userCommand.split(" ")
     #check if exit
     if split_string[0].lower() == 'exit':
         sys.exit(1)
