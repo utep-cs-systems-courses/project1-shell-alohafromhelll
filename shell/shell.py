@@ -1,25 +1,38 @@
 import os, sys, re
 
 while True:
-    #what to print
-    command = '$'
-    x = input(command)
-    #string stuff
-    split_string = x.split(" ")
 
-    pid = os.fork()
+    x = input()
+    split_string = x.split(" ")
 
     if split_string[0].lower() == 'exit':
         sys.exit(1)
 
-    homedirectory = '/Users/jerardovelazquez'
-
     if split_string[0].lower() == 'cd':
         os.chdir(split_string[1])
 
-    if pid == 0:
-        args = split_string
 
+
+    pid = os.fork()
+
+
+
+    if pid == 0:
+        #print('test')
+
+
+        if '>' in split_string:
+            i = split_string.index('>')
+
+
+            os.close(1)
+            os.open(split_string[i + 1], os.O_CREAT | os.O_WRONLY);
+            #sys.stdout = open(split_string[i+1].strip(), "w")
+            os.set_inheritable(1, True)
+            split_string = split_string[0:i]
+
+
+        args = split_string
         for dir in re.split(":", os.environ['PATH']): # try each directory in the path
             program = "%s/%s" % (dir, args[0])
             #error handling
